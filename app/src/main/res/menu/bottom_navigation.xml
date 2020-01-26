@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_transactions"
+        android:icon="@drawable/ic_show_chart_black_24dp"
+        android:title="Transactions"/>
+
+    <item
+        android:id="@+id/nav_order_book"
+        android:icon="@drawable/ic_view_compact_black_24dp"
+        android:title="Order Book"/>
+
+    <item
+        android:id="@+id/nav_price_alert"
+        android:icon="@drawable/ic_add_alert_black_24dp"
+        android:title="Price Alert"/>
+
+
+
+</menu>
