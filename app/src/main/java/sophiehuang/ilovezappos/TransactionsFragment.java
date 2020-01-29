@@ -24,9 +24,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import sophiehuang.ilovezappos.Model.ApiClient;
-import sophiehuang.ilovezappos.Model.BitstampJsonApi;
-import sophiehuang.ilovezappos.Model.Transaction;
+import sophiehuang.ilovezappos.Model.Retrofit2API.ApiClient;
+import sophiehuang.ilovezappos.Model.Retrofit2API.BitstampJsonApi;
+import sophiehuang.ilovezappos.Model.DataObjects.Transaction;
 
 public class TransactionsFragment extends Fragment {
 

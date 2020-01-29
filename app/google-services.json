@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "373639008334",
+    "firebase_url": "https://ilovezappos-c8735.firebaseio.com",
+    "project_id": "ilovezappos-c8735",
+    "storage_bucket": "ilovezappos-c8735.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373639008334:android:eafc52b0c546294ece331f",
+        "android_client_info": {
+          "package_name": "sophiehuang.ilovezappos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "373639008334-601hpot6ppr6oj89lshv0ffd0avb6pd9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6OZB_j6PUF35YBZF9ruU549952wXJnMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "373639008334-601hpot6ppr6oj89lshv0ffd0avb6pd9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

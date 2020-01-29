@@ -1,11 +1,9 @@
 package sophiehuang.ilovezappos;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,10 +17,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import sophiehuang.ilovezappos.Model.ApiClient;
-import sophiehuang.ilovezappos.Model.BitstampJsonApi;
-import sophiehuang.ilovezappos.Model.OrderAdapter;
-import sophiehuang.ilovezappos.Model.OrderList;
+import sophiehuang.ilovezappos.Model.Retrofit2API.ApiClient;
+import sophiehuang.ilovezappos.Model.Retrofit2API.BitstampJsonApi;
+import sophiehuang.ilovezappos.Model.RecyclerViewAdapter.OrderAdapter;
+import sophiehuang.ilovezappos.Model.DataObjects.OrderList;
 
 public class OrderBookFragment extends Fragment {
 
