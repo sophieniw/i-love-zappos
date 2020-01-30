@@ -25,13 +25,13 @@ import sophiehuang.ilovezappos.Model.DataObjects.OrderList;
 public class OrderBookFragment extends Fragment {
 
     //declare variables
-    BitstampJsonApi bitstampJsonApi;
+    private BitstampJsonApi bitstampJsonApi;
     private OrderAdapter orderAdapter;
     private RecyclerView recyclerView, recyclerView2;
 
 
-    List bids;
-    List asks;
+    private List bids;
+    private List asks;
 
 
     @Nullable
@@ -60,12 +60,8 @@ public class OrderBookFragment extends Fragment {
                     return;
                 }
 
-
                 bids = response.body().getBids();
-                Toast.makeText(getActivity(), bids.size() + "", Toast.LENGTH_SHORT).show();
-
                 generateOrderInRecyclerView(bids, "bids");
-
             }
 
             @Override
@@ -87,26 +83,21 @@ public class OrderBookFragment extends Fragment {
                     return;
                 }
 
-                Toast.makeText(getActivity(), "Response order book", Toast.LENGTH_SHORT).show();
-
                 asks = response.body().getAsks();
-
                 generateOrderInRecyclerView(asks, "asks");
 
             }
 
             @Override
             public void onFailure(Call<OrderList> call, Throwable t) {
-                Toast.makeText(getActivity(), "Response order book", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
     private void generateOrderInRecyclerView(List orders, String orderType) {
-
         orderAdapter = new OrderAdapter(orders);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         if (orderType.equals("bids")) {

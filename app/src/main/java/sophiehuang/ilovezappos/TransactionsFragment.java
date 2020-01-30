@@ -11,13 +11,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,9 +35,9 @@ import sophiehuang.ilovezappos.Model.DataObjects.Transaction;
 
 public class TransactionsFragment extends Fragment {
 
-    LineChart linechart;
-    List<Entry> lineEntries;
-    BitstampJsonApi bitstampJsonApi;
+    private LineChart linechart;
+    private List<Entry> lineEntries;
+    private BitstampJsonApi bitstampJsonApi;
 
     @Nullable
     @Override
@@ -48,7 +53,6 @@ public class TransactionsFragment extends Fragment {
 
         setLineEntries();
 
-
         return view;
     }
 
@@ -56,7 +60,6 @@ public class TransactionsFragment extends Fragment {
     //a function to get the bitstamp api from base url
     private void setLineEntries() {
         Call<List<Transaction>> call = bitstampJsonApi.getTransactions();
-        Toast.makeText(getActivity(), "ENTERING ENQUEUE", Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
@@ -74,12 +77,25 @@ public class TransactionsFragment extends Fragment {
                     Transaction ts = transactions.get(i);
                     String price = ts.getPrice();
                     Float price_f = Float.parseFloat(price);
+
                     lineEntries.add(new Entry(count, price_f));
                     count++;
                 }
 
+                long unixStartDate = Long.parseLong(transactions.get(0).getDate());
+                long unixEndDate = Long.parseLong(transactions.get(transactions.size() - 1).getDate());
 
-                LineDataSet dataSet = new LineDataSet(lineEntries, "Recent Transaction History");
+                Date startDate = new java.util.Date(unixStartDate * 1000L);
+                Date endDate = new java.util.Date(unixEndDate * 1000L);
+                SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+                sdf.setTimeZone(java.util.TimeZone.getTimeZone("PST"));
+                String strStartDate = sdf.format(startDate);
+                String strEndDate = sdf.format(endDate);
+
+                final ArrayList<String> xAxisLabel = new ArrayList<>();
+
+
+                LineDataSet dataSet = new LineDataSet(lineEntries, "Recent BTC Transaction History");
                 dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
                 dataSet.setHighlightEnabled(false);
                 dataSet.setCircleRadius(1.0f);
@@ -87,8 +103,19 @@ public class TransactionsFragment extends Fragment {
                 LineData data = new LineData(dataSet);
                 XAxis xAxis = linechart.getXAxis();
                 xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis.setLabelCount(8, true);
+
+                //TODO: FIX THE X AXIS LABELS
+                //POSSIBLE TODO: IMPLEMENT MARKER ANIMATION
+                xAxisLabel.add(strStartDate);
+                xAxisLabel.add(strEndDate);
+
+                YAxis rightAxis = linechart.getAxisRight();
+                rightAxis.setDrawLabels(false);
+
                 linechart.setTouchEnabled(true);
                 linechart.setData(data);
+                linechart.setAutoScaleMinMaxEnabled(true);
                 linechart.notifyDataSetChanged();
                 linechart.invalidate();
             }
