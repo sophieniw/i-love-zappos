@@ -6,8 +6,9 @@ Such is a v interesting coding project handed over by the secret agents of Zappo
 * [Folders Explained](#folders-explained)
   * [app](#app)
   * [misc](#misc)
-* [Examples](#examples)
 * [Bug Fix](#bug-fix)
+* [Examples](#examples)
+
 
 ## Folders Explained
 ### app
@@ -21,19 +22,18 @@ This folder has the source used to build the Coin Zap app.
 ### misc
 This folder contains some testing and debug xml files automatically uploaded from Android Studio while committing and pushing to Github. 
 
-## Examples
-
-Here some screenshots provided:
-
-![Transaction History Fragment]()
-
-
-![Order Book Fragment]()
-
-
-![Price Alert Fragment]()
-
-
 ## Bug Fix
 
 There is an unknown bug that makes the markerView within the line chart unstable. Sometimes the marker shows up but sometimes it doesn't. I have tried to find the reasons for a long time but so far I have no luck. 
+
+## Examples
+Here some screenshots provided:
+
+![](https://github.com/sophieniw/i-love-zappos/blob/master/misc/pics/transacs.png)
+
+![](https://github.com/sophieniw/i-love-zappos/blob/master/misc/pics/orders.png)
+
+![](https://github.com/sophieniw/i-love-zappos/blob/master/misc/pics/alert.png)
+
+
+
