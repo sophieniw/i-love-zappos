@@ -14,8 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.firebase.jobdispatcher.Constraint;
@@ -39,15 +37,24 @@ import sophiehuang.ilovezappos.Model.JobDispatcher.MyJobService;
 import static com.firebase.jobdispatcher.FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS;
 
 
+//==========================================
+// CODE SNAPSHOT
+// under the onCreateView of price alert fragment class,
+// a value event listener is created for the firebase realtime database to retrieve user's price alert;
+// set alert and reset alert buttons on click methods are also defined and connected to
+// MyJobService through startJob and stopJob methods
+//
+//
+
 public class PriceAlertFragment extends Fragment {
+
     private DatabaseReference ref;
     private Button btnSetAlert, btnResetAlert;
     private EditText etPriceToAlert;
     private ConstraintLayout myLayout;
-
-
-    FirebaseJobDispatcher jobDispatcher;
+    private FirebaseJobDispatcher jobDispatcher;
     private static final String JOB_TAG = "Price_Alert_Job_Tag";
+
 
     @Nullable
     @Override
@@ -130,14 +137,14 @@ public class PriceAlertFragment extends Fragment {
 
 
     public void startJob(View view) {
-//        final int INTERVAL= (int) TimeUnit.HOURS.toSeconds(1); // every 1 hour to start the job
-//        final int END = (int)TimeUnit.MINUTES.toSeconds(5); // 5 mins delay window
+        final int SEPARATION_INTERVAL = (int) TimeUnit.HOURS.toSeconds(1); // starts the job very hour
+        final int DELAY_WINDOW = (int) TimeUnit.MINUTES.toSeconds(5); // provides 5 min delay window
         Job job = jobDispatcher.newJobBuilder()
                 .setService(MyJobService.class)
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
                 .setTag(JOB_TAG)
-                .setTrigger(Trigger.executionWindow(5, 5))
+                .setTrigger(Trigger.executionWindow(SEPARATION_INTERVAL, DELAY_WINDOW))  //you could reset executionWindow to have a much shorter test time
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 .setReplaceCurrent(false)
                 .setConstraints(Constraint.ON_ANY_NETWORK)

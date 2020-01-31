@@ -1,6 +1,8 @@
 package sophiehuang.ilovezappos;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +13,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,9 +29,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import sophiehuang.ilovezappos.Model.MPAndroidChart.CustomMarkerView;
 import sophiehuang.ilovezappos.Model.Retrofit2API.ApiClient;
 import sophiehuang.ilovezappos.Model.Retrofit2API.BitstampJsonApi;
 import sophiehuang.ilovezappos.Model.DataObjects.Transaction;
+
+//==========================================
+// CODE SNAPSHOT
+// Transactions Fragment handles a line chart created based on MPAndroidChart.
+// In the onCreateView, the fragment invokes setLineEntries() method. Within the setLineEntries()
+// method, an API call to the recent BTC transactions is made and the data is passed through
+// to the method generateChart(...) in order to generate a line chart.
+//
+
 
 public class TransactionsFragment extends Fragment {
 
@@ -72,60 +82,85 @@ public class TransactionsFragment extends Fragment {
                 //fields of Transaction objects are automatically filled
                 List<Transaction> transactions = response.body();
 
+                String[] unixTimes = new String[transactions.size()];
+
                 int count = 0;
                 for (int i = transactions.size() - 1; i >= 0; i--) {
                     Transaction ts = transactions.get(i);
                     String price = ts.getPrice();
+                    String unixDate = ts.getDate();
+
                     Float price_f = Float.parseFloat(price);
 
+                    unixTimes[count] = unixDate;
                     lineEntries.add(new Entry(count, price_f));
                     count++;
                 }
 
-                long unixStartDate = Long.parseLong(transactions.get(0).getDate());
-                long unixEndDate = Long.parseLong(transactions.get(transactions.size() - 1).getDate());
+                String[] datetimes = convertUnixToDateTime(unixTimes);
 
-                Date startDate = new java.util.Date(unixStartDate * 1000L);
-                Date endDate = new java.util.Date(unixEndDate * 1000L);
-                SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-                sdf.setTimeZone(java.util.TimeZone.getTimeZone("PST"));
-                String strStartDate = sdf.format(startDate);
-                String strEndDate = sdf.format(endDate);
-
-                final ArrayList<String> xAxisLabel = new ArrayList<>();
-
-
-                LineDataSet dataSet = new LineDataSet(lineEntries, "Recent BTC Transaction History");
-                dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-                dataSet.setHighlightEnabled(false);
-                dataSet.setCircleRadius(1.0f);
-
-                LineData data = new LineData(dataSet);
-                XAxis xAxis = linechart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setLabelCount(8, true);
-
-                //TODO: FIX THE X AXIS LABELS
-                //POSSIBLE TODO: IMPLEMENT MARKER ANIMATION
-                xAxisLabel.add(strStartDate);
-                xAxisLabel.add(strEndDate);
-
-                YAxis rightAxis = linechart.getAxisRight();
-                rightAxis.setDrawLabels(false);
-
-                linechart.setTouchEnabled(true);
-                linechart.setData(data);
-                linechart.setAutoScaleMinMaxEnabled(true);
-                linechart.notifyDataSetChanged();
-                linechart.invalidate();
+                generateChart(lineEntries, datetimes);
             }
 
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("TRANSACTIONS_CALL_ENQUEUE_ERROR", t.getMessage());
             }
         });
 
+    }
+
+    private String[] convertUnixToDateTime(String[] strUnixs) {
+        String[] dates = new String[strUnixs.length];
+        int count = 0;
+        for (String unix : strUnixs) {
+            long longUnix = Long.parseLong(unix);
+            Date date = new java.util.Date(longUnix * 1000L);
+            SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM-dd HH:mm");
+            String strDate = sdf.format(date);
+
+            dates[count] = strDate;
+            count++;
+        }
+        return dates;
+    }
+
+    private void generateChart(List<Entry> dataEntries, String[] datetimes) {
+        LineDataSet dataSet = new LineDataSet(dataEntries, "Recent BTC Transaction History (GMT)");
+        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        dataSet.setHighlightEnabled(true);
+        dataSet.setHighLightColor(Color.parseColor("#008577"));
+        dataSet.setCircleRadius(1.0f);
+        dataSet.setDrawFilled(true);
+
+        LineData data = new LineData(dataSet);
+        XAxis xAxis = linechart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setLabelCount(10);
+        xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(datetimes));
+        xAxis.setLabelRotationAngle(-65);
+
+        YAxis rightAxis = linechart.getAxisRight();
+        rightAxis.setDrawLabels(false);
+
+        Legend legend = linechart.getLegend();
+        legend.setYOffset(10);
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setTextColor(Color.BLACK);
+        legend.setTextSize(12);
+
+        linechart.setTouchEnabled(true);
+        linechart.getDescription().setEnabled(false);
+        linechart.setData(data);
+        linechart.setAutoScaleMinMaxEnabled(true);
+
+        //create a markerView
+        CustomMarkerView mv = new CustomMarkerView(getActivity(), R.layout.custom_marker_view_layout);
+        // set the marker to the chart
+        linechart.setMarkerView(mv);
+
+        linechart.notifyDataSetChanged();
+        linechart.invalidate();
     }
 }
 

@@ -12,6 +12,11 @@ import java.util.List;
 
 import sophiehuang.ilovezappos.R;
 
+//==========================================
+// CODE SNAPSHOT
+// OrderAdapter is a recycler view adapter used to set content into different visual components properly
+//
+
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
     private List<List> orders;
     private float sum = 0f;

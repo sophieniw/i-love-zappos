@@ -9,6 +9,15 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+//==========================================
+// CODE SNAPSHOT
+// the main activity creates and handles a bottom navigation view with 3 fragments:
+// 1. TransactionsFragment: to display transaction history
+// 2. OrderBookFragment: to display the recent bids and asks details
+// 3. PriceAlertFragment: to allow users to set or reset an hourly price alert
+//
+//
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

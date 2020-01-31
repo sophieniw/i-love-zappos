@@ -9,6 +9,18 @@ import sophiehuang.ilovezappos.Model.DataObjects.OrderList;
 import sophiehuang.ilovezappos.Model.DataObjects.Ticker;
 import sophiehuang.ilovezappos.Model.DataObjects.Transaction;
 
+
+//==========================================
+// CODE SNAPSHOT
+// To be used with ApiClient class to create calls:
+// BitstampJsonApi bitstampJsonApi = ApiClient.getClient().create(BitstampJsonApi.class);
+// and then get your calls like this:
+// Call<List<Transaction>> call = bitstampJsonApi.getTransactions();
+// Call<OrderList> call = bitstampJsonApi.getOrders();
+//
+// BitstampJsonApi interface serves as a direction as to which path to go and what objects to cast
+// the data into
+
 public interface BitstampJsonApi {
     @GET("transactions/btcusd")
     Call<List<Transaction>> getTransactions();

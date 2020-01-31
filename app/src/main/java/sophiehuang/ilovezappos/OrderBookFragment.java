@@ -1,6 +1,7 @@
 package sophiehuang.ilovezappos;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,17 @@ import sophiehuang.ilovezappos.Model.Retrofit2API.ApiClient;
 import sophiehuang.ilovezappos.Model.Retrofit2API.BitstampJsonApi;
 import sophiehuang.ilovezappos.Model.RecyclerViewAdapter.OrderAdapter;
 import sophiehuang.ilovezappos.Model.DataObjects.OrderList;
+
+
+//=====================================================
+// CODE SNAPSHOT
+// The OrderBookFragment handles 2 recycler views to display a bid table and a ask table;
+// it has 3 private methods: 1. setBidsData() uses Retrofit2 to handle an API call to retrieve bids
+// data from Bitstamp; 2. setAsksData() has same functionality as setBidsData() but for Asks orders;
+// 3. generateOrderInRecyclerView(...) is used to implement data into recycler views in methods
+// setBidsData() and setAsksData
+//
+//
 
 public class OrderBookFragment extends Fragment {
 
@@ -66,7 +78,7 @@ public class OrderBookFragment extends Fragment {
 
             @Override
             public void onFailure(Call<OrderList> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("ORDERLIST_ENQUEUE_ERROR", t.getMessage());
 
             }
         });

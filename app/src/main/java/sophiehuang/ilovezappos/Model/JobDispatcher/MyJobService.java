@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.firebase.jobdispatcher.JobService;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +27,15 @@ import sophiehuang.ilovezappos.Model.Retrofit2API.ApiClient;
 import sophiehuang.ilovezappos.Model.Retrofit2API.BitstampJsonApi;
 import sophiehuang.ilovezappos.R;
 
+//==========================================
+// CODE SNAPSHOT
+// MyJobService class is meant to be a class that extends JobService from FirebaseJobDispatcher.
+// the onStartJob() method triggers an async task that contains a background task;
+// in the background task, Ticker object is retrieved through retrofit2 callback  every hour;
+// the price of the Ticker object then is compared to the user alert price retrieved from Firebase database
+// if the user alert price is lower than the hourly ticker price, then the onPostExecute generate
+// and push a notification. Clicking the notification will open the application
+//
 
 public class MyJobService extends JobService {
 
@@ -41,7 +49,6 @@ public class MyJobService extends JobService {
     private NotificationCompat.Builder notificationBuilder;
     static final int NOTIFICATION_ID = 1;
     static final String CHANNEL_ID = "001";
-
 
 
 
@@ -119,6 +126,7 @@ public class MyJobService extends JobService {
         }
         return lastPriceIsLower;
     }
+
 
     private void sendNotification() {
         Log.d("SEND_NOTIFICATION()", "Entering sendNotification()");
