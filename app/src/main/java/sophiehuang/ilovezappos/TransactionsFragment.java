@@ -100,6 +100,7 @@ public class TransactionsFragment extends Fragment {
                 String[] datetimes = convertUnixToDateTime(unixTimes);
 
                 generateChart(lineEntries, datetimes);
+
             }
 
             @Override
@@ -129,7 +130,7 @@ public class TransactionsFragment extends Fragment {
         LineDataSet dataSet = new LineDataSet(dataEntries, "Recent BTC Transaction History (GMT)");
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         dataSet.setHighlightEnabled(true);
-        dataSet.setHighLightColor(Color.parseColor("#008577"));
+        dataSet.setHighLightColor(Color.RED);
         dataSet.setCircleRadius(1.0f);
         dataSet.setDrawFilled(true);
 
@@ -149,18 +150,29 @@ public class TransactionsFragment extends Fragment {
         legend.setTextColor(Color.BLACK);
         legend.setTextSize(12);
 
-        linechart.setTouchEnabled(true);
         linechart.getDescription().setEnabled(false);
         linechart.setData(data);
+        linechart.setHighlightPerTapEnabled(true);
+        linechart.setTouchEnabled(true);
         linechart.setAutoScaleMinMaxEnabled(true);
 
         //create a markerView
         CustomMarkerView mv = new CustomMarkerView(getActivity(), R.layout.custom_marker_view_layout);
+
         // set the marker to the chart
+        // TODO: DEBUG NEEDED - CANNOT FIND THE REASON WHY MARKER VIEW IS NOT SHOWING UP
+        //                    - log message shows markerview is created succesfully
+        //                     - potential reason checked: 1. refreshContent within CustomMarkerView
+        //                     -                           2. custom_marker_view_layout.xml
+
         linechart.setMarkerView(mv);
+
+        Log.d("GENERATE_CHART():", "" + linechart.getMarker());
+
 
         linechart.notifyDataSetChanged();
         linechart.invalidate();
+
     }
 }
 

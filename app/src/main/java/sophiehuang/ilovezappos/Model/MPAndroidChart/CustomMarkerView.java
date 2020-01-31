@@ -1,6 +1,7 @@
 package sophiehuang.ilovezappos.Model.MPAndroidChart;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
@@ -34,7 +35,7 @@ public class CustomMarkerView extends MarkerView {
 
         tvContent.setText("$" + e.getY() + "/BTC");
 
-        // this will perform necessary layouting
+        // this will perform necessary layout
         super.refreshContent(e, highlight);
     }
 
